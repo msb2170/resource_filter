@@ -6,23 +6,40 @@
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}" />
   </head>
   <body>
-    <h1>Resources</h1>
-    <a href="{% url 'add_resource' %}">Add Resource</a>
+    <header>
+      <h1>Resources</h1>
+      <a href="{% url 'add_resource' %}" class="add-resource-button"
+        >Add Resource</a
+      >
+    </header>
     <form method="GET">
-      <label>
-        <input type="checkbox" name="category" value="category" /> Category {%
-        for resource in resources %} {{resource.category}} {% endfor %}
-      </label>
-      <label>
-        <input type="checkbox" name="location" value="location" /> Location {%
-        for resource in resources %} {{resource.location}} {% endfor %}
-      </label>
+      <fieldset>
+        <legend>Category</legend>
+        {% for category in categories %}
+        <label>
+          <input type="checkbox" name="category" value="{{ category }}" />
+          {{ category }} </label
+        ><br />
+        {% endfor %}
+      </fieldset>
+
+      <fieldset>
+        <legend>Location</legend>
+        {% for location in locations %}
+        <label>
+          <input type="checkbox" name="location" value="{{ location }}" />
+          {{ location }} </label
+        ><br />
+        {% endfor %}
+      </fieldset>
+
       <button type="submit">Filter</button>
     </form>
-
     <ul>
       {% for resource in resources %}
-      <li>{{resource.name}} | {{resource.category}} | {{resource.location}}</li>
+      <li>
+        {{ resource.name }} - {{ resource.category }} - {{ resource.location }}
+      </li>
       {% endfor %}
     </ul>
   </body>
