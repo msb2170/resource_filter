@@ -1,22 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Resource
+from .forms import ResourceForm
 
-def resource_list(request):
-    resources = Resource.objects.all()
+def filter_resources(request):
+    categories = request.GET.getlist('category')
+    if categories:
+        resources = Resource.objects.filter(category__in=categories)
+    else:
+        resources = Resource.objects.all()
+    return render(request, 'resource_list.html', {'resources': resources})
 
-    category = request.GET.get('category')
-    resource_location = request.GET.get('location')
 
-    if category:
-        resources = resources.filter(category=category)
-    if resource_location:
-        resources = resources.filter(location=resource_location)
-
-    context = {
-        'resources': resources,
-        'categories': Resource.objects.values_list('category', flat=True).distinct(),
-        'location': Resource.objects.values_list('location', flat=True).distinct(),
-    }
-
-    return render(request, 'resources/resource_list.html', context)
-
+def add_resource(request):
+    if request.method == 'POST':
+        form = ResourceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('resource_list')
+        
+    else:
+        form = ResourceForm()
+    return render(request, 'resources/add_resource.html', {'form': form})

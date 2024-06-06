@@ -2,22 +2,27 @@
 <html>
   <head>
     <title>Resource List</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}" />
   </head>
   <body>
     <h1>Resources</h1>
+    <a href="{% url 'add_resource' %}">Add Resource</a>
     <form method="GET">
-      <select name="category">
-        <option value="">All Categories</option>
-        {% for category in categories %}
-        <option value="{{category}}">{{ category }}</option>
-        {% endfor %}
-      </select>
+      <label>
+        <input type="checkbox" name="category" value="category" /> Category {%
+        for resource in resources %} {{resource.category}} {% endfor %}
+      </label>
+      <label>
+        <input type="checkbox" name="location" value="location" /> Location {%
+        for resource in resources %} {{resource.location}} {% endfor %}
+      </label>
       <button type="submit">Filter</button>
     </form>
 
     <ul>
       {% for resource in resources %}
-      <li>{{resource.title}}</li>
+      <li>{{resource.name}} | {{resource.category}} | {{resource.location}}</li>
       {% endfor %}
     </ul>
   </body>
